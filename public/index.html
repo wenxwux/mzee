@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#11111a" />
+  <meta name="description" content="成都学长专属在线状态监测页面。数据纯属娱乐，请勿当真。" />
+  <title>成都学长研究中心 · 在线状态监测</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <div class="page" id="page">
+    <header>
+      <div class="brand"><span class="brand-mark">✳</span><span>成都学长研究中心</span></div>
+      <div class="edition"><span class="live-dot"></span> 实时监测中 · 数据纯属娱乐</div>
+    </header>
+    <main>
+      <div class="side-note left"><span>今日状态</span> 有点帅 · 仍然单身</div>
+      <section class="hero" aria-label="学长在线状态">
+        <p class="eyebrow"><span class="eyebrow-icon">✦</span> 成都地区 · 学长信号捕捉成功</p>
+        <h1>学长正在<span class="title-highlight">发光</span></h1>
+        <p class="subtitle">请保持镇定，他只是刚好在线</p>
+        <div class="status-pill"><span class="live-dot"></span> 当前状态：在线（大概吧）</div>
+        <div class="art-wrap" id="portrait" role="button" tabindex="0" aria-label="点击查看学长档案">
+          <div class="orbit" aria-hidden="true"></div>
+          <div class="disc photo" role="img" aria-label="缓慢顺时针旋转的人像照片"></div>
+          <div class="photo-badge">本人认证<br /><strong>学长本人</strong></div>
+          <div class="tap-hint">点我查看档案 ↗</div>
+        </div>
+        <div class="caption"><span class="caption-star">✦</span> 成都学长，在线聊骚 <span class="caption-star">✦</span></div>
+        <div class="sub-caption">今日魅力值：<strong id="charm">98.6</strong> / 100　<span>（误差范围：学长本人说了算）</span></div>
+        <div class="controls">
+          <button class="control-btn" id="toggle" type="button" aria-label="暂停旋转" title="暂停 / 继续旋转">
+            <svg id="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3h2v10H5zm4 0h2v10H9z"/></svg>
+          </button>
+          <span class="speed">学长自转速度 &nbsp;<strong>0.03 rpm</strong></span>
+        </div>
+        <button class="prank-button" id="prank" type="button">不要点这里 <span>←</span></button>
+      </section>
+      <div class="side-note right"><span>友情提示</span> 截图发群里<br />效果更佳 ↙</div>
+    </main>
+    <footer>
+      <span>成都学长研究中心 · 绝不严肃</span>
+      <span class="location">样本编号：CX-001　·　采集地点：成都</span>
+      <span class="sound"><span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> 本页面没有录音，放心</span>
+    </footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="confetti-layer" id="confetti" aria-hidden="true"></div>
+  <script src="/assets/js/main.js" defer></script>
+</body>
+</html>
