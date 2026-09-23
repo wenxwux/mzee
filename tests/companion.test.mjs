@@ -13,7 +13,7 @@ function setup({reduced=false,noAnimationAPI=false}={}){
   const photo=noAnimationAPI?{}:{getAnimations:()=>[{animationName:'rotate',currentTime:clock}]};
   const document={hidden:false,getElementById:id=>id==='page'?page:id==='companion-touch'?touch:shape,querySelector:()=>photo,querySelectorAll:()=>holes,addEventListener:(name,fn)=>events[name]=fn};
   vm.runInNewContext(source,{document,window:{addEventListener(){}},geometryPaths,matchMedia:()=>({matches:reduced}),performance:{now:()=>now},requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)});
-  return {document,events,aperture:()=>holes[3].attrs.d,angle:()=>Number(shape.attrs.transform.match(/[-\d.]+/)[0]),click:()=>touch.click(),snapshot:()=>JSON.stringify([outline,...holes].map(n=>n.attrs)),color:()=>shape.style.fill,frames:()=>frames.size,advance(ms,pause=false){for(let i=0;i<ms;i+=20){now+=20;if(!pause)clock+=20;const fs=[...frames.values()];frames.clear();fs.forEach(fn=>fn(now));}}};
+  return {document,events,outline:()=>outline.attrs.d,aperture:()=>holes[3].attrs.d,angle:()=>Number(shape.attrs.transform.match(/[-\d.]+/)[0]),click:()=>touch.click(),snapshot:()=>JSON.stringify([outline,...holes].map(n=>n.attrs)),color:()=>shape.style.fill,frames:()=>frames.size,advance(ms,pause=false){for(let i=0;i<ms;i+=20){now+=20;if(!pause)clock+=20;const fs=[...frames.values()];frames.clear();fs.forEach(fn=>fn(now));}}};
 }
 test('clicks open the shape, inactivity closes it, pause freezes breathing',()=>{
  const s=setup();s.advance(400);const initial=s.snapshot();s.advance(400);assert.notEqual(s.snapshot(),initial);
@@ -32,14 +32,13 @@ test('hidden tabs stop the loop and recover according to elapsed time',()=>{
 test('reduced motion and unavailable optional browser APIs preserve the symbol',()=>{
  const s=setup({reduced:true,noAnimationAPI:true});const initial=s.snapshot();s.advance(1000);assert.equal(s.snapshot(),initial);s.click();s.advance(100);assert.notEqual(s.color(),'rgb(228,151,124)');
 });
-test('without interaction the opening breathes, including without a portrait animation API',()=>{
+test('without interaction the solid silhouette visibly breathes, including without a portrait animation API',()=>{
  const radius=path=>{const [x,y]=path.match(/-?\d+\.\d+/g).slice(0,2).map(Number);return Math.hypot(x,y);};
  for(const noAnimationAPI of [false,true]){
   const s=setup({noAnimationAPI});
-  s.advance(1500);const inhale=radius(s.aperture());
-  s.advance(3000);const exhale=radius(s.aperture());
-  assert(inhale-exhale>1.5,'The central opening should visibly breathe while idle');
-  assert(inhale<5&&exhale>2.5,'Idle movement should remain subtle');
+  s.advance(1500);const inhale=radius(s.outline());assert.equal(radius(s.aperture()),0);
+  s.advance(3000);const exhale=radius(s.outline());assert.equal(radius(s.aperture()),0);
+  assert(inhale/exhale>1.20&&inhale/exhale<1.24,'The silhouette should expand and contract by about ten percent');
   assert.equal(s.color(),'rgb(228,151,124)','Breathing must not count as interaction');
  }
 });

@@ -1,4 +1,4 @@
-import { knotContours } from './knot-contours.mjs?v=20260923-6';
+import { knotContours } from './knot-contours.mjs?v=20260923-7';
 
 // Fixed, uneven arms keep a hand-drawn silhouette without frame-to-frame jitter.
 const arms = [
@@ -22,7 +22,7 @@ export function geometryPaths(openness = 0, breath = 0) {
   const amount = Math.max(0, Math.min(1, openness));
   const blend = amount * amount * (3 - 2 * amount);
   const breathing = Math.max(-1, Math.min(1, breath));
-  const scale = 1 + breathing * 0.03;
+  const scale = 1 + breathing * (0.10 - 0.05 * blend);
   const outline = points => `M${points.map(p=>p.map(v=>v.toFixed(3)).join(',')).join(' L')} Z`;
   const outer = knotContours[7].map(([x,y]) => {
     const angle = Math.atan2(y,x);
@@ -35,8 +35,8 @@ export function geometryPaths(openness = 0, breath = 0) {
     return contour.map(([x,y])=> {
       if(index===3){
         const radius=Math.hypot(x,y);
-        // Idle breathing moves the opening itself, not just the whole symbol.
-        const aperture=(3.8*(1+breathing*0.24)*(1-blend)+radius*blend)*scale;
+        // The centre stays solid at rest; only interaction opens it.
+        const aperture=radius*blend*scale;
         return [x/radius*aperture,y/radius*aperture];
       }
       // Mask apertures open together; overlapping apertures remain transparent.

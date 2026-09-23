@@ -1,4 +1,4 @@
-import { geometryPaths } from './geometry.mjs?v=20260923-6';
+import { geometryPaths } from './geometry.mjs?v=20260923-7';
 
 // Progressively enhance the inline SVG; the symbol is visible before JS loads.
 (() => {

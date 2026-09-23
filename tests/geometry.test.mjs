@@ -37,5 +37,14 @@ test('fully open silhouette and apertures match the reference knot contours',()=
  const g=geometryPaths(1);const paths=[...g.holes,g.outer];
  paths.forEach((path,i)=>assert.deepEqual(parse(path),knotContours[i]));
  const min=level=>Math.min(...parse(geometryPaths(level).holes[3]).map(p=>Math.hypot(...p)));
- assert(min(0)<4);assert(min(1)>12);
+ assert.equal(min(0),0);assert(min(1)>12);
+});
+test('all mask apertures have zero area throughout idle breathing',()=>{
+ for(const breath of [-1,-0.5,0,0.5,1]){
+  for(const path of geometryPaths(0,breath).holes){
+   const points=parse(path);
+   const twiceArea=points.reduce((sum,p,i)=>{const q=points[(i+1)%points.length];return sum+p[0]*q[1]-q[0]*p[1];},0);
+   assert.equal(twiceArea,0,'Idle breathing must not create a hole');
+  }
+ }
 });
