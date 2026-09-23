@@ -2,6 +2,10 @@
 
 成都学长研究中心的静态娱乐页面，使用原生 HTML、CSS 和 JavaScript。
 
+- GitHub 仓库：<https://github.com/wenxwux/mzee>（私有）
+- Pages 地址：<https://mzee.pages.dev>
+- 自定义域名：<https://mzee.ninedrive.cn>
+
 ## 目录
 
 ```text
@@ -29,6 +33,8 @@ wrangler.jsonc            # Cloudflare Pages 输出目录
 - 自定义域名：`mzee.ninedrive.cn`
 
 推送到 `main` 后由 Cloudflare 自动发布。只发布 `public/` 内的文件，IDE 配置和文档不会进入站点。
+
+DNS 使用代理开启的 CNAME：`mzee.ninedrive.cn` → `mzee.pages.dev`。域名也必须在 Pages 项目的 Custom domains 中关联；仅添加 DNS 记录不够。
 
 官方说明：[Git 集成](https://developers.cloudflare.com/pages/configuration/git-integration/)、[自定义域名](https://developers.cloudflare.com/pages/configuration/custom-domains/)。
 
