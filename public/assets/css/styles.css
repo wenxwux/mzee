@@ -237,7 +237,6 @@ h1 {
   align-items: stretch;
   color: #e4b5a1;
 }
-.companion-kicker { font-size: 9px; letter-spacing: .19em; }
 .companion-touch {
   display: block;
   width: 100%;
@@ -245,22 +244,13 @@ h1 {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  color: inherit;
-  background: radial-gradient(circle, #251d29 0%, rgba(25,20,32,.88) 49%, transparent 70%);
+  background: transparent;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 .companion-touch:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
-.companion-svg { display: block; width: 100%; overflow: visible; }
-.companion-orbit { fill: none; stroke: #e4b5a1; stroke-opacity: .2; stroke-width: .7; stroke-dasharray: 1 6; }
-#companion-shape { fill: #e4977c; stroke: #211a27; stroke-width: 1.5; stroke-linejoin: round; }
-.companion-center { fill: #fffafc; opacity: .45; }
-.companion-readout { display: flex; justify-content: space-between; margin: 0 10px; font-size: 9px; letter-spacing: .05em; }
-#companion-value { color: var(--muted); font-variant-numeric: tabular-nums; }
-.companion-meter { height: 2px; margin: 8px 10px; background: rgba(228,181,161,.12); overflow: hidden; }
-.companion-meter > span { display: block; height: 100%; background: linear-gradient(90deg, #e4977c, #ace6c0); transform: scaleX(0); transform-origin: left; }
-.companion-hint { font-size: 8px; color: #aaa0b3; letter-spacing: .07em; }
+.companion-svg { display: block; width: 100%; height: auto; overflow: visible; }
 
 @media (min-width: 651px) and (max-width: 1000px) {
   .breathing-companion { left: -65px; width: 118px; bottom: 0; }
@@ -422,21 +412,9 @@ footer .location {
     position: relative;
     left: auto;
     bottom: auto;
-    width: min(100%, 232px);
-    margin: 14px auto 0;
-    display: grid;
-    grid-template-columns: 88px 1fr;
-    grid-template-rows: auto auto 2px auto;
-    column-gap: 14px;
-    row-gap: 6px;
-    align-items: center;
-    text-align: left;
+    width: 104px;
+    margin: 12px auto 0;
   }
-  .companion-touch { grid-column: 1; grid-row: 1 / 5; }
-  .companion-kicker { grid-column: 2; font-size: 9px; letter-spacing: .08em; }
-  .companion-readout { grid-column: 2; margin: 0; font-size: 9px; }
-  .companion-meter { grid-column: 2; margin: 0; }
-  .companion-hint { grid-column: 2; font-size: 8px; letter-spacing: 0; }
 
   footer {
     font-size: 8px;
