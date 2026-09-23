@@ -48,7 +48,7 @@ test('idle breathing follows exactly the first quarter of the interaction morph,
  }
 });
 test('the asymmetric symbol does not jump when the portrait completes a turn',()=>{
- const s=setup();s.advance(26920);const before=s.angle();s.advance(160);const after=s.angle();
- assert(before>59&&before<60&&after>60&&after<61,'The symbol should advance 60 degrees per 27-second portrait turn');
+ const s=setup();s.advance(35920);const before=s.angle();s.advance(160);const after=s.angle();
+ assert(Math.abs(before-35920/132000*360)<0.02&&Math.abs(after-36080/132000*360)<0.02,'The symbol should complete a turn in 132 seconds independently of the portrait');
  assert(after>before&&after-before<1,'Rotation must remain continuous across the portrait turn');
 });
