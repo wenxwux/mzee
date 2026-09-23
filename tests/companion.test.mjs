@@ -18,33 +18,33 @@ function setup({reduced=false,noAnimationAPI=false}={}){
 test('clicks open the shape, inactivity closes it, pause freezes breathing',()=>{
  const s=setup();s.advance(400);const initial=s.snapshot();s.advance(400);assert.notEqual(s.snapshot(),initial);
  for(let i=0;i<4;i++)s.click();s.advance(300);s.click();s.advance(400);assert.equal(s.color(),'rgb(172,230,192)');
- s.advance(2500);assert(s.progress()<=0.25,'Interaction should settle back into idle breathing');
+ s.advance(2500);assert(s.progress()<=0.40,'Interaction should settle back into idle breathing');
  // Allow the pending 30fps draw to sample the newly paused animation clock.
  s.advance(80,true);const paused=s.snapshot();s.advance(400,true);assert.equal(s.snapshot(),paused);
 });
 test('only nearby motion charges the shape and a parked pointer releases it',()=>{
- const s=setup();for(let i=0;i<30;i++)s.events.pointermove({clientX:900+i,clientY:900,pointerId:1});s.advance(500);assert(s.progress()<=0.25,'Distant motion must not exceed idle breathing');
- for(let i=0;i<40;i++)s.events.pointermove({clientX:150+i%2*20,clientY:150,pointerId:1});s.advance(500);assert(s.progress()>0.25,'Nearby motion must advance beyond idle breathing');s.advance(2500);assert(s.progress()<=0.25,'Interaction should settle back into idle breathing');
+ const s=setup();for(let i=0;i<30;i++)s.events.pointermove({clientX:900+i,clientY:900,pointerId:1});s.advance(500);assert(s.progress()<=0.40,'Distant motion must not exceed idle breathing');
+ for(let i=0;i<40;i++)s.events.pointermove({clientX:150+i%2*20,clientY:150,pointerId:1});s.advance(500);assert(s.progress()>0.40,'Nearby motion must advance beyond idle breathing');s.advance(2500);assert(s.progress()<=0.40,'Interaction should settle back into idle breathing');
 });
 test('hidden tabs stop the loop and recover according to elapsed time',()=>{
- const s=setup();s.click();s.advance(500);s.document.hidden=true;s.events.visibilitychange();assert.equal(s.frames(),0);s.advance(10000);s.document.hidden=false;s.events.visibilitychange();s.advance(1200);assert(s.progress()<=0.25);
+ const s=setup();s.click();s.advance(500);s.document.hidden=true;s.events.visibilitychange();assert.equal(s.frames(),0);s.advance(10000);s.document.hidden=false;s.events.visibilitychange();s.advance(1200);assert(s.progress()<=0.40);
 });
 test('reduced motion and unavailable optional browser APIs preserve the symbol',()=>{
  const s=setup({reduced:true,noAnimationAPI:true});const initial=s.snapshot();s.advance(1000);assert.equal(s.snapshot(),initial);s.click();s.advance(100);assert.notEqual(s.color(),'rgb(228,151,124)');
 });
-test('idle breathing follows exactly the first quarter of the interaction morph, without scaling',()=>{
+test('idle breathing follows exactly the first 40 percent of the interaction morph, without scaling',()=>{
  for(const noAnimationAPI of [false,true]){
   const s=setup({noAnimationAPI});
   assert.equal(s.progress(),0);
   s.advance(3000);
-  assert(Math.abs(s.progress()-0.25)<0.001,'Inhale stops at one quarter');
-  assert.equal(s.outline(),geometryPaths(0.25).outer);
-  assert.equal(s.aperture(),geometryPaths(0.25).holes[3]);
+  assert(Math.abs(s.progress()-0.40)<0.001,'Inhale stops at 40 percent');
+  assert.equal(s.outline(),geometryPaths(0.40).outer);
+  assert.equal(s.aperture(),geometryPaths(0.40).holes[3]);
   s.advance(3000);
   assert(s.progress()<0.001,'Exhale returns to the closed initial shape');
   assert.equal(s.outline(),geometryPaths(0).outer);
   assert.equal(s.aperture(),geometryPaths(0).holes[3]);
-  for(let i=0;i<150;i++){s.advance(40);assert(s.progress()>=0&&s.progress()<=0.25);}
+  for(let i=0;i<150;i++){s.advance(40);assert(s.progress()>=0&&s.progress()<=0.40);}
  }
 });
 test('the asymmetric symbol does not jump when the portrait completes a turn',()=>{
