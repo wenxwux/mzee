@@ -16,6 +16,17 @@ test('the interactive element has no visible text, meter, or tooltip',()=>{
   const part=html.slice(html.indexOf('<div class="breathing-companion"'),html.indexOf('<div class="caption"'));
   assert.equal(part.replace(/<[^>]*>/g,'').trim(),'');assert(!part.includes('title='));assert(!part.includes('companion-meter'));
 });
+test('the resting silhouette has uneven arm lengths and angular spacing',()=>{
+ const points=parse(geometryPaths(0).outer);
+ const radii=points.map(p=>Math.hypot(...p));
+ const tips=points.filter((_,i)=>radii[i]>radii[(i+points.length-1)%points.length]&&radii[i]>radii[(i+1)%points.length]&&radii[i]>30);
+ assert.equal(tips.length,12);
+ const lengths=tips.map(p=>Math.hypot(...p));
+ assert(Math.max(...lengths)-Math.min(...lengths)>15,'Arms should visibly differ in length');
+ const angles=tips.map(p=>(Math.atan2(p[1],p[0])+2*Math.PI)%(2*Math.PI)).sort((a,b)=>a-b);
+ const gaps=angles.map((angle,i)=>(angles[(i+1)%angles.length]-angle+2*Math.PI)%(2*Math.PI));
+ assert(Math.max(...gaps)-Math.min(...gaps)>0.1,'Arms should not be evenly spaced');
+});
 test('closed outer silhouette and all seven apertures stay finite and in view',()=>{
  for(let step=0;step<=100;step++)for(const breath of [-1,0,1]){
   const g=geometryPaths(step/100,breath);assert.equal(g.holes.length,7);

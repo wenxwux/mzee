@@ -1,4 +1,22 @@
-import { knotContours } from './knot-contours.mjs?v=20260923-4';
+import { knotContours } from './knot-contours.mjs?v=20260923-5';
+
+// Fixed, uneven arms keep a hand-drawn silhouette without frame-to-frame jitter.
+const arms = [
+  [0.16, 46, 0.18], [0.65, 36, 0.14], [1.18, 53, 0.17],
+  [1.70, 43, 0.21], [2.22, 49, 0.12], [2.69, 34, 0.19],
+  [3.27, 52, 0.14], [3.71, 40, 0.23], [4.29, 47, 0.16],
+  [4.78, 55, 0.13], [5.28, 38, 0.21], [5.90, 50, 0.15],
+];
+
+function tightRadius(angle) {
+  const core = 16 + 1.8 * Math.sin(3 * angle + 0.4) + 0.9 * Math.sin(5 * angle);
+  return arms.reduce((radius, [direction, length, width]) => {
+    const distance = Math.abs(Math.atan2(Math.sin(angle - direction), Math.cos(angle - direction)));
+    if (distance >= width) return radius;
+    const taper = Math.cos(distance / width * Math.PI / 2) ** 1.7;
+    return Math.max(radius, core + (length - core) * taper);
+  }, core);
+}
 
 export function geometryPaths(openness = 0, breath = 0) {
   const amount = Math.max(0, Math.min(1, openness));
@@ -7,7 +25,7 @@ export function geometryPaths(openness = 0, breath = 0) {
   const outline = points => `M${points.map(p=>p.map(v=>v.toFixed(3)).join(',')).join(' L')} Z`;
   const outer = knotContours[7].map(([x,y]) => {
     const angle = Math.atan2(y,x);
-    const radius = 17 + 31 * ((1 - Math.cos(12 * angle)) / 2) ** 3;
+    const radius = tightRadius(angle);
     return [(Math.cos(angle)*radius*(1-blend)+x*blend)*scale,(Math.sin(angle)*radius*(1-blend)+y*blend)*scale];
   });
   const holes = knotContours.slice(0,7).map((contour,index) => {
