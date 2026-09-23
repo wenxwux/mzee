@@ -33,6 +33,8 @@ wrangler.jsonc            # Cloudflare Pages 输出目录
 
 本地检查：`node --test tests/*.test.mjs`。推送前还需在本地浏览器检查初始、中间、完全舒展和自动恢复状态，以及桌面和手机布局；通过后再推送 `main` 触发线上部署。
 
+HTML 和模块引用的 CSS/JS 均带统一版本参数（当前 `20260923-3`）；修改这些文件时同步递增所有引用的版本。`public/_headers` 要求浏览器重新验证资源，避免旧缓存与新 HTML 混用。发布前需验证从上一版缓存升级的场景。
+
 ## Cloudflare Pages
 
 通过 Cloudflare Pages 的 GitHub 集成部署此仓库：

@@ -1,4 +1,4 @@
-import { knotContours } from './knot-contours.mjs';
+import { knotContours } from './knot-contours.mjs?v=20260923-3';
 
 export function geometryPaths(openness = 0, breath = 0) {
   const amount = Math.max(0, Math.min(1, openness));
