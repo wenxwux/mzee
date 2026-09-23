@@ -16,14 +16,14 @@ function setup({reduced=false,noAnimationAPI=false}={}){
 }
 test('clicks open the shape, inactivity closes it, pause freezes breathing',()=>{
  const s=setup();s.advance(400);const initial=s.snapshot();s.advance(400);assert.notEqual(s.snapshot(),initial);
- for(let i=0;i<4;i++)s.click();s.advance(1000);assert.equal(s.color(),'rgb(172,230,192)');
- s.advance(9500);assert.equal(s.color(),'rgb(228,151,124)');
+ for(let i=0;i<4;i++)s.click();s.advance(300);s.click();s.advance(400);assert.equal(s.color(),'rgb(172,230,192)');
+ s.advance(2500);assert.equal(s.color(),'rgb(228,151,124)');
  // Allow the pending 30fps draw to sample the newly paused animation clock.
  s.advance(80,true);const paused=s.snapshot();s.advance(400,true);assert.equal(s.snapshot(),paused);
 });
 test('only nearby motion charges the shape and a parked pointer releases it',()=>{
  const s=setup();for(let i=0;i<30;i++)s.events.pointermove({clientX:900+i,clientY:900,pointerId:1});s.advance(500);assert.equal(s.color(),'rgb(228,151,124)');
- for(let i=0;i<40;i++)s.events.pointermove({clientX:150+i%2*20,clientY:150,pointerId:1});s.advance(500);assert.notEqual(s.color(),'rgb(228,151,124)');s.advance(9500);assert.equal(s.color(),'rgb(228,151,124)');
+ for(let i=0;i<40;i++)s.events.pointermove({clientX:150+i%2*20,clientY:150,pointerId:1});s.advance(500);assert.notEqual(s.color(),'rgb(228,151,124)');s.advance(2500);assert.equal(s.color(),'rgb(228,151,124)');
 });
 test('hidden tabs stop the loop and recover according to elapsed time',()=>{
  const s=setup();s.click();s.advance(500);s.document.hidden=true;s.events.visibilitychange();assert.equal(s.frames(),0);s.advance(10000);s.document.hidden=false;s.events.visibilitychange();s.advance(1200);assert.equal(s.color(),'rgb(228,151,124)');

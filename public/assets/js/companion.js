@@ -1,4 +1,4 @@
-import { geometryPaths } from './geometry.mjs?v=20260923-3';
+import { geometryPaths } from './geometry.mjs?v=20260923-4';
 
 // Progressively enhance the inline SVG; the symbol is visible before JS loads.
 (() => {
@@ -25,7 +25,7 @@ import { geometryPaths } from './geometry.mjs?v=20260923-3';
   }
 
   function remainingCharge(now) {
-    return Math.max(0, charge - Math.max(0, now - lastInteraction - 1400) / 6500);
+    return Math.max(0, charge - Math.max(0, now - lastInteraction - 400) / 1600);
   }
 
   function interact(amount) {
