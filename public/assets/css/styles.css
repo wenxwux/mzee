@@ -209,7 +209,7 @@ h1 {
   border-radius: 50%;
   background: #27202b;
   box-shadow: 0 0 70px rgba(255, 112, 183, 0.2);
-  animation: rotate 36s linear infinite, pulse 2.5s linear infinite alternate;
+  animation: rotate 27s linear infinite, pulse 2.5s linear infinite alternate;
 }
 
 .disc.photo {

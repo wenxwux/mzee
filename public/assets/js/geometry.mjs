@@ -1,4 +1,4 @@
-import { knotContours } from './knot-contours.mjs?v=20260923-8';
+import { knotContours } from './knot-contours.mjs?v=20260923-9';
 
 // Fixed, uneven arms keep a hand-drawn silhouette without frame-to-frame jitter.
 const arms = [

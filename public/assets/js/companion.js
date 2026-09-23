@@ -1,4 +1,4 @@
-import { geometryPaths } from './geometry.mjs?v=20260923-8';
+import { geometryPaths } from './geometry.mjs?v=20260923-9';
 
 // Progressively enhance the inline SVG; the symbol is visible before JS loads.
 (() => {
@@ -71,9 +71,10 @@ import { geometryPaths } from './geometry.mjs?v=20260923-8';
     if (now - lastDraw >= 1000 / 30) {
       // Read the portrait's actual animation clock: pause/resume stays in phase.
       rotation = photo.getAnimations?.().find(animation => animation.animationName === 'rotate');
-      const cycle = Number(rotation?.currentTime ?? idleClock) / 36000;
+      const animationTime = Number(rotation?.currentTime ?? idleClock);
+      const cycle = animationTime / 27000;
       // Breathe along the same morph as interaction, limited to its first quarter.
-      const breath = reducedMotion.matches ? 0 : 0.25 * (1 - Math.cos(cycle * Math.PI * 12)) / 2;
+      const breath = reducedMotion.matches ? 0 : 0.25 * (1 - Math.cos(animationTime / 6000 * Math.PI * 2)) / 2;
       const amount = openness + (1 - openness) * breath;
       render(amount, reducedMotion.matches ? 0 : (cycle * 60) % 360);
       lastDraw = now;
