@@ -1,10 +1,11 @@
-import { geometryPaths } from './geometry.mjs?v=20260923-5';
+import { geometryPaths } from './geometry.mjs?v=20260923-6';
 
 // Progressively enhance the inline SVG; the symbol is visible before JS loads.
 (() => {
   const touch = document.getElementById('companion-touch');
   const shape = document.getElementById('companion-shape');
   const photo = document.querySelector('.disc.photo');
+  const page = document.getElementById('page');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const outline = shape.querySelector('.companion-outline');
   const holes = [...document.querySelectorAll('.companion-hole')];
@@ -19,6 +20,7 @@ import { geometryPaths } from './geometry.mjs?v=20260923-5';
   let bounds;
   let rotation;
   let frame;
+  let idleClock = 0;
 
   function updateBounds() {
     bounds = touch.getBoundingClientRect();
@@ -62,15 +64,16 @@ import { geometryPaths } from './geometry.mjs?v=20260923-5';
   function tick(now) {
     const dt = Math.min((now - lastFrame) / 1000, 0.1);
     lastFrame = now;
+    if (!page.classList.contains('paused')) idleClock += dt * 1000;
     const target = remainingCharge(now);
     openness = reducedMotion.matches ? target : mix(openness, target, 1 - Math.exp(-dt * 7));
     if (openness < 0.001) openness = 0;
     if (now - lastDraw >= 1000 / 30) {
       // Read the portrait's actual animation clock: pause/resume stays in phase.
       rotation = photo.getAnimations?.().find(animation => animation.animationName === 'rotate');
-      const cycle = Number(rotation?.currentTime ?? 0) / 36000;
+      const cycle = Number(rotation?.currentTime ?? idleClock) / 36000;
       const breath = reducedMotion.matches ? 0 : Math.sin(cycle * Math.PI * 12);
-      render(openness, breath, reducedMotion.matches ? 0 : cycle % 1 * 60);
+      render(openness, breath, reducedMotion.matches ? 0 : (cycle * 60) % 360);
       lastDraw = now;
     }
     frame = requestAnimationFrame(tick);

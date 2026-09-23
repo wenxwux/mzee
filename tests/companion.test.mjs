@@ -8,11 +8,12 @@ function setup({reduced=false,noAnimationAPI=false}={}){
   let now=0,id=0,clock=0;const frames=new Map(),events={};
   const node=()=>({style:{},attrs:{},setAttribute(k,v){this.attrs[k]=v;},addEventListener(k,f){this[k]=f;},getBoundingClientRect(){return {left:100,top:100,width:100,height:100};}});
   const outline=node(),holes=Array.from({length:7},node);outline.attrs.d=geometryPaths().outer;
+  const page={classList:{contains:()=>false}};
   const touch=node(),shape=node();shape.querySelector=()=>outline;
   const photo=noAnimationAPI?{}:{getAnimations:()=>[{animationName:'rotate',currentTime:clock}]};
-  const document={hidden:false,getElementById:id=>id==='companion-touch'?touch:shape,querySelector:()=>photo,querySelectorAll:()=>holes,addEventListener:(name,fn)=>events[name]=fn};
+  const document={hidden:false,getElementById:id=>id==='page'?page:id==='companion-touch'?touch:shape,querySelector:()=>photo,querySelectorAll:()=>holes,addEventListener:(name,fn)=>events[name]=fn};
   vm.runInNewContext(source,{document,window:{addEventListener(){}},geometryPaths,matchMedia:()=>({matches:reduced}),performance:{now:()=>now},requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)});
-  return {document,events,click:()=>touch.click(),snapshot:()=>JSON.stringify([outline,...holes].map(n=>n.attrs)),color:()=>shape.style.fill,frames:()=>frames.size,advance(ms,pause=false){for(let i=0;i<ms;i+=20){now+=20;if(!pause)clock+=20;const fs=[...frames.values()];frames.clear();fs.forEach(fn=>fn(now));}}};
+  return {document,events,aperture:()=>holes[3].attrs.d,angle:()=>Number(shape.attrs.transform.match(/[-\d.]+/)[0]),click:()=>touch.click(),snapshot:()=>JSON.stringify([outline,...holes].map(n=>n.attrs)),color:()=>shape.style.fill,frames:()=>frames.size,advance(ms,pause=false){for(let i=0;i<ms;i+=20){now+=20;if(!pause)clock+=20;const fs=[...frames.values()];frames.clear();fs.forEach(fn=>fn(now));}}};
 }
 test('clicks open the shape, inactivity closes it, pause freezes breathing',()=>{
  const s=setup();s.advance(400);const initial=s.snapshot();s.advance(400);assert.notEqual(s.snapshot(),initial);
@@ -30,4 +31,19 @@ test('hidden tabs stop the loop and recover according to elapsed time',()=>{
 });
 test('reduced motion and unavailable optional browser APIs preserve the symbol',()=>{
  const s=setup({reduced:true,noAnimationAPI:true});const initial=s.snapshot();s.advance(1000);assert.equal(s.snapshot(),initial);s.click();s.advance(100);assert.notEqual(s.color(),'rgb(228,151,124)');
+});
+test('without interaction the opening breathes, including without a portrait animation API',()=>{
+ const radius=path=>{const [x,y]=path.match(/-?\d+\.\d+/g).slice(0,2).map(Number);return Math.hypot(x,y);};
+ for(const noAnimationAPI of [false,true]){
+  const s=setup({noAnimationAPI});
+  s.advance(1500);const inhale=radius(s.aperture());
+  s.advance(3000);const exhale=radius(s.aperture());
+  assert(inhale-exhale>1.5,'The central opening should visibly breathe while idle');
+  assert(inhale<5&&exhale>2.5,'Idle movement should remain subtle');
+  assert.equal(s.color(),'rgb(228,151,124)','Breathing must not count as interaction');
+ }
+});
+test('the asymmetric symbol does not jump when the portrait completes a turn',()=>{
+ const s=setup();s.advance(35920);const before=s.angle();s.advance(160);const after=s.angle();
+ assert(after>before&&after-before<1,'Rotation must remain continuous across the portrait turn');
 });
