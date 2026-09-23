@@ -21,11 +21,26 @@
         <h1>学长正在<span class="title-highlight">发光</span></h1>
         <p class="subtitle">请保持镇定，他只是刚好在线</p>
         <div class="status-pill"><span class="live-dot"></span> 当前状态：在线（大概吧）</div>
+        <div class="portrait-stage">
         <div class="art-wrap" id="portrait" role="button" tabindex="0" aria-label="点击查看学长档案">
           <div class="orbit" aria-hidden="true"></div>
           <div class="disc photo" role="img" aria-label="缓慢顺时针旋转的人像照片"></div>
           <div class="photo-badge">本人认证<br /><strong>学长本人</strong></div>
           <div class="tap-hint">点我查看档案 ↗</div>
+        </div>
+        <div class="breathing-companion" id="breathing-companion">
+          <span class="companion-kicker">学长の松弛度</span>
+          <button class="companion-touch" id="companion-touch" type="button" aria-label="让呼吸几何放松" aria-describedby="companion-hint">
+            <svg class="companion-svg" viewBox="-76 -76 152 152" aria-hidden="true">
+              <circle class="companion-orbit" r="67" />
+              <g id="companion-shape"></g>
+              <circle class="companion-center" r="1.5" />
+            </svg>
+          </button>
+          <span class="companion-readout"><span id="companion-state">紧实待机</span><span id="companion-value">00%</span></span>
+          <span class="companion-meter" aria-hidden="true"><span id="companion-fill"></span></span>
+          <span class="companion-hint" id="companion-hint">靠近晃晃 · 点点也行</span>
+        </div>
         </div>
         <div class="caption"><span class="caption-star">✦</span> 成都学长，在线聊骚 <span class="caption-star">✦</span></div>
         <div class="sub-caption">今日魅力值：<strong id="charm">98.6</strong> / 100　<span>（误差范围：学长本人说了算）</span></div>
@@ -48,5 +63,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="confetti-layer" id="confetti" aria-hidden="true"></div>
   <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/companion.js" defer></script>
 </body>
 </html>

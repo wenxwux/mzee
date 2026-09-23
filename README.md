@@ -14,6 +14,7 @@ public/
   assets/
     css/styles.css        # 页面样式
     js/main.js            # 页面交互
+    js/companion.js       # 呼吸几何：同步旋转、互动舒展与自动恢复
     images/portrait.jpeg  # 头像
 wrangler.jsonc            # Cloudflare Pages 输出目录
 ```
@@ -21,6 +22,8 @@ wrangler.jsonc            # Cloudflare Pages 输出目录
 ## 本地预览
 
 在项目根目录运行 `python3 -m http.server 8080 --directory public`，然后打开 <http://localhost:8080>。项目没有构建依赖，也无需安装 npm 包。
+
+头像左下方的呼吸几何会随头像旋转呼吸。鼠标在附近移动，或使用点击、触屏点按、Enter / 空格，可逐渐提高松弛度，从十二道放射纹展开为六瓣交织图案。停止互动 1.4 秒后逐渐恢复，完全恢复约需 8 秒。暂停头像时同步暂停呼吸；系统开启“减少动态效果”时停止自动呼吸和旋转，仍可互动改变形态。
 
 ## Cloudflare Pages
 
