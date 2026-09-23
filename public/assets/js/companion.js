@@ -1,4 +1,4 @@
-import { geometryPaths } from './geometry.mjs?v=20260923-7';
+import { geometryPaths } from './geometry.mjs?v=20260923-8';
 
 // Progressively enhance the inline SVG; the symbol is visible before JS loads.
 (() => {
@@ -53,8 +53,8 @@ import { geometryPaths } from './geometry.mjs?v=20260923-7';
   window.addEventListener('scroll', updateBounds, { passive: true });
   if ('ResizeObserver' in window) new ResizeObserver(updateBounds).observe(touch);
 
-  function render(amount, breath, angle) {
-    const geometry = geometryPaths(amount, breath);
+  function render(amount, angle) {
+    const geometry = geometryPaths(amount);
     outline.setAttribute('d', geometry.outer);
     geometry.holes.forEach((d, i) => holes[i].setAttribute('d', d));
     shape.setAttribute('transform', 'rotate(' + angle.toFixed(2) + ')');
@@ -72,8 +72,10 @@ import { geometryPaths } from './geometry.mjs?v=20260923-7';
       // Read the portrait's actual animation clock: pause/resume stays in phase.
       rotation = photo.getAnimations?.().find(animation => animation.animationName === 'rotate');
       const cycle = Number(rotation?.currentTime ?? idleClock) / 36000;
-      const breath = reducedMotion.matches ? 0 : Math.sin(cycle * Math.PI * 12);
-      render(openness, breath, reducedMotion.matches ? 0 : (cycle * 60) % 360);
+      // Breathe along the same morph as interaction, limited to its first quarter.
+      const breath = reducedMotion.matches ? 0 : 0.25 * (1 - Math.cos(cycle * Math.PI * 12)) / 2;
+      const amount = openness + (1 - openness) * breath;
+      render(amount, reducedMotion.matches ? 0 : (cycle * 60) % 360);
       lastDraw = now;
     }
     frame = requestAnimationFrame(tick);
@@ -89,6 +91,6 @@ import { geometryPaths } from './geometry.mjs?v=20260923-7';
     }
   });
   updateBounds();
-  render(0, 0, 0);
+  render(0, 0);
   frame = requestAnimationFrame(tick);
 })();

@@ -28,8 +28,8 @@ test('the resting silhouette has uneven arm lengths and angular spacing',()=>{
  assert(Math.max(...gaps)-Math.min(...gaps)>0.1,'Arms should not be evenly spaced');
 });
 test('closed outer silhouette and all seven apertures stay finite and in view',()=>{
- for(let step=0;step<=100;step++)for(const breath of [-1,0,1]){
-  const g=geometryPaths(step/100,breath);assert.equal(g.holes.length,7);
+ for(let step=0;step<=100;step++){
+  const g=geometryPaths(step/100);assert.equal(g.holes.length,7);
   for(const path of [g.outer,...g.holes]){assert(path.endsWith(' Z'));assert(!path.includes('NaN'));for(const p of parse(path))assert(Math.hypot(...p)<68,'Clipped geometry');}
  }
 });
@@ -39,12 +39,10 @@ test('fully open silhouette and apertures match the reference knot contours',()=
  const min=level=>Math.min(...parse(geometryPaths(level).holes[3]).map(p=>Math.hypot(...p)));
  assert.equal(min(0),0);assert(min(1)>12);
 });
-test('all mask apertures have zero area throughout idle breathing',()=>{
- for(const breath of [-1,-0.5,0,0.5,1]){
-  for(const path of geometryPaths(0,breath).holes){
+test('the fully contracted endpoint has no holes',()=>{
+  for(const path of geometryPaths(0).holes){
    const points=parse(path);
    const twiceArea=points.reduce((sum,p,i)=>{const q=points[(i+1)%points.length];return sum+p[0]*q[1]-q[0]*p[1];},0);
-   assert.equal(twiceArea,0,'Idle breathing must not create a hole');
+   assert.equal(twiceArea,0,'The initial endpoint must have a solid centre');
   }
- }
 });
